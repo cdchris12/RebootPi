@@ -8,13 +8,13 @@ miners = getMiners()
 class API(object):
     @cherrypy.expose
     def index(self):
-        return cherrypy.HTTPError(400, "This style of calling the API is not supported.")
+        raise cherrypy.HTTPError(400, "This style of calling the API is not supported.")
     # End def
 
     @cherrypy.expose
     def restart(self, num=""):
         if num is "":
-            return cherrypy.HTTPError(400, "Missing the number of the miner to be rebooted.")
+            raise cherrypy.HTTPError(400, "Missing the number of the miner to be rebooted.")
         else:
             for miner in miners:
                 if miner.miner_num == num:
@@ -31,8 +31,6 @@ def main():
     cherrypy.quickstart(API())
 # End def
 
-if '__name__' == '__main__':
-    main()
-else:
+if __name__ == '__main__':
     main()
 # End if
