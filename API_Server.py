@@ -27,6 +27,12 @@ class API(object):
     # End def
 # End class
 
-if '__name__' == '__main__':
+def main():
     cherrypy.quickstart(API())
+# End def
+
+if '__name__' == '__main__':
+    main()
+else:
+    main()
 # End if
