@@ -1,5 +1,5 @@
 #!/usr/bin/python
 
-from RebootServer import miner, miner_objs
+from RebootServer import getMiners
 
-print miner_objs
+print getMiners()

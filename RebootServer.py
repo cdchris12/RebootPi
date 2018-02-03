@@ -117,6 +117,11 @@ def getTime():
     return  arrow.now().format('YYYY-MM-DD HH:MM:SS')
 # End def
 
+def getMiners():
+    global miner_objs
+    return miner_objs
+# End def
+
 def main():
     Setup()
     RunServer()
