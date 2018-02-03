@@ -1,5 +1,32 @@
 #!/usr/bin/python
 
 from RebootServer import getMiners
+import cherrypy
 
-getMiners()
+miners = getMiners()
+
+class API(object):
+    @cherrypy.expose
+    def index(self):
+        return cherrypy.HTTPError(400, "This style of calling the API is not supported.")
+    # End def
+
+    @cherrypy.expose
+    def restart(self, num=""):
+        if num is "":
+            return cherrypy.HTTPError(400, "Missing the number of the miner to be rebooted.")
+        else:
+            for miner in miners:
+                if miner.miner_num == num:
+                    print ("Rebooting miner %s!" % miner.miner_num)
+                    miner.reboot()
+                    return
+                # End if
+            # End for
+        # End else
+    # End def
+# End class
+
+if '__name__' == '__main__':
+    cherrypy.quickstart(API())
+# End if
