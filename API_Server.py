@@ -2,4 +2,4 @@
 
 from RebootServer import getMiners
 
-print getMiners()
+getMiners()

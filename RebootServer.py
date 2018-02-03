@@ -71,9 +71,7 @@ def Setup():
     print("Set up the GPIO pins!")
 
     # Create the miner objects
-    for num in miner_nums:
-        miner_objs.append( miner(num, earl="http://interstate-towing.ddns.net:70"+num, io_num=GPIO_pins[int(num)]))
-    # End for
+    getMiners()
 
     print("Set up the miner objects!")
 # End def
@@ -119,7 +117,15 @@ def getTime():
 
 def getMiners():
     global miner_objs
-    return miner_objs
+
+    ret = []
+    for num in miner_nums:
+        ret.append( miner(num, earl="http://interstate-towing.ddns.net:70"+num, io_num=GPIO_pins[int(num)]))
+    # End for
+
+    miner_objs = [f for f in ret]
+
+    return ret
 # End def
 
 def main():
