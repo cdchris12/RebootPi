@@ -121,7 +121,7 @@ def getMiners():
     global miners
 
     ret = []
-    for item in config:
+    for item in config['miners']:
         ret.append( miner(name=item['name'], earl="%s:%s" % (item['url'], item['port']), io_num=GPIO_pins[item['io_num']]))
     # End for
 

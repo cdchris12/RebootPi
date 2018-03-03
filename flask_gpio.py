@@ -42,7 +42,7 @@ def hello():
 @app.route("/reboot/<name>")
 def reboot(name):
     try:
-        for miner in config:
+        for miner in config['hosts']:
             if miner['name'] == name:
                 break
             # End if
