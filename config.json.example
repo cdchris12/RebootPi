@@ -1,0 +1,16 @@
+{
+    "hosts": [
+        {
+            "url": "http://example.com",
+            "port": 9999,
+            "name": "rig01",
+            "io_pin": 0
+        },
+        {
+            "url": "http://example.net",
+            "port": 1234,
+            "name": "rig02",
+            "io_pin": 1
+        }
+    ]
+}
