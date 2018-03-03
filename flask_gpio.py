@@ -30,43 +30,51 @@ GPIO.setup(GPIO_pins, GPIO.OUT, initial=GPIO.LOW)
 
 @app.route("/")
 def hello():
-  now = datetime.datetime.now()
-  timeString = now.strftime("%Y-%m-%d %H:%M")
-  templateData = {
-    'title' : 'HELLO!',
-    'time': timeString
-  }
-  return render_template('main.html', **templateData)
+    now = datetime.datetime.now()
+    timeString = now.strftime("%Y-%m-%d %H:%M")
+    templateData = {
+        'title' : 'HELLO!',
+        'time': timeString
+    }
+    return render_template('main.html', **templateData)
 
-@app.route("/reboot/<pin>")
-def reboot(pin):
-  try:
-    # Setup the GPIO pin as an output to simulate force reboot command
-    GPIO.setup(GPIO_pins[int(pin)], GPIO.OUT)
+@app.route("/reboot/<name>")
+def reboot(name):
+    try:
+        for miner in config:
+            if miner['name'] == name:
+                break
+            # End if
+        # End for
 
-    # Close the circuit for 10 seconds
-    GPIO.output(GPIO_pins[int(pin)], GPIO.HIGH)
-    sleep(10)
-    GPIO.output(GPIO_pins[int(pin)], GPIO.LOW)
+        # Setup the GPIO pin as an output to simulate force reboot command
+        GPIO.setup(GPIO_pins[miner['io_pin']], GPIO.OUT)
 
-    # Close the circuit for 1 second to simulate power button press
-    GPIO.output(GPIO_pins[int(pin)], GPIO.HIGH)
-    sleep(1)
-    GPIO.output(GPIO_pins[int(pin)], GPIO.LOW)
+        # Close the circuit for 10 seconds
+        GPIO.output(GPIO_pins[miner['io_pin']], GPIO.HIGH)
+        sleep(10)
+        GPIO.output(GPIO_pins[miner['io_pin']], GPIO.LOW)
 
-    response = "Successfully rebooted miner connected to pin " + GPIO_pins[int(pin) +"!"
-  except:
-    response = "There was an error setting pin " + str(GPIO_pins[int(pin)) + "!"
-  # End try/except block
+        # Close the circuit for 1 second to simulate power button press
+        GPIO.output(GPIO_pins[miner['io_pin']], GPIO.HIGH)
+        sleep(1)
+        GPIO.output(GPIO_pins[miner['io_pin']], GPIO.LOW)
 
-  templateData = {
-    'title' : 'Reboot status',
-    'response' : response
-  }
+        response = "Successfully rebooted miner connected to pin " + GPIO_pins[int(pin) +"!"
+        GPIO.cleanup(GPIO_pins[miner['io_pin']])
+    except:
+        response = "There was an error setting pin " + str(GPIO_pins[int(pin)) + "!"
+        GPIO.cleanup(GPIO_pins[miner['io_pin']])
+    # End try/except block
 
-  return render_template('pin.html', **templateData)
+    templateData = {
+        'title' : 'Reboot status',
+        'response' : response
+    }
+
+    return render_template('pin.html', **templateData)
 # End def
 
 if __name__ == "__main__":
-  app.run(host='0.0.0.0', port=80, debug=True)
+    app.run(host='0.0.0.0', port=80, debug=True)
 # End if
