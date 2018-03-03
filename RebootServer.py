@@ -5,7 +5,7 @@
 try:
     os.stat("config.json")
 except Exception:
-    print "Config file missing!!!"
+    print ("Config file missing!!!")
     return(1)
 else:
     with open('config.json', 'rb') as infile:
