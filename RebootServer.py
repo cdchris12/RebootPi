@@ -8,7 +8,7 @@ except Exception:
     print ("Config file missing!!!")
     return(1)
 else:
-    with open('config.json', 'rb') as infile:
+    with open('config.json', 'r') as infile:
         config = json.load(infile.read())
     # End with
 # End try/except block
