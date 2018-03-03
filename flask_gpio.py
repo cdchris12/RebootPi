@@ -67,10 +67,10 @@ def reboot(name):
         sleep(1)
         GPIO.output(GPIO_pins[miner['io_pin']], GPIO.LOW)
 
-        response = "Successfully rebooted miner connected to pin " + GPIO_pins[miner['io_pin']] +"!"
+        response = "Successfully rebooted miner " + miner['name'] +"!"
         GPIO.cleanup(GPIO_pins[miner['io_pin']])
     except Exception as e:
-        response = "There was an error setting pin " + str(GPIO_pins[miner['io_pin']]) + "!\n" + str(e)
+        response = "There was an error rebooting miner " + miner['name'] + "!\n" + str(e)
         GPIO.cleanup(GPIO_pins[miner['io_pin']])
     # End try/except block
 
