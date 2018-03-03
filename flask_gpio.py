@@ -1,15 +1,4 @@
 #!/usr/bin/env python3
-# Try loading the config file and die if not found
-try:
-    os.stat("config.json")
-except Exception:
-    print ("Config file missing!!!")
-    return(1)
-else:
-    with open('config.json', 'rb') as infile:
-        config = json.load(infile.read())
-    # End with
-# End try/except block
 
 # Listing of all GPIO pins we can use, 17 total
 GPIO_pins = [7, 11, 12, 13, 15, 16, 18, 22, 29, 31, 32, 33, 35, 36, 37, 38, 40]
@@ -20,7 +9,20 @@ import arrow
 from flask import Flask, render_template
 import datetime
 import RPi.GPIO as GPIO
+import sys
 app = Flask(__name__)
+
+# Try loading the config file and die if not found
+try:
+    os.stat("config.json")
+except Exception:
+    print ("Config file missing!!!")
+    sys.exit(1)
+else:
+    with open('config.json', 'rb') as infile:
+        config = json.load(infile.read())
+    # End with
+# End try/except block
 
 # Set the GPIO pins to use the board numbering scheme
 GPIO.setmode(GPIO.BOARD)
