@@ -62,7 +62,7 @@ def reboot(name):
 
         # Close the circuit for 1 second to simulate power button press
         GPIO.output(GPIO_pins[miner['io_pin']], GPIO.HIGH)
-        sleep(1)
+        sleep(3)
         GPIO.output(GPIO_pins[miner['io_pin']], GPIO.LOW)
 
         response = "Successfully rebooted miner connected to pin " + GPIO_pins[miner['io_pin']] +"!"
