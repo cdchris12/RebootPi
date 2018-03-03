@@ -10,6 +10,7 @@ from flask import Flask, render_template
 import datetime
 import RPi.GPIO as GPIO
 import sys
+import os
 app = Flask(__name__)
 
 # Try loading the config file and die if not found
