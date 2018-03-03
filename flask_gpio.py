@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # Try loading the config file and die if not found
 try:
     os.stat("config.json")
