@@ -22,7 +22,7 @@ except Exception:
     sys.exit(1)
 else:
     with open('config.json', 'r') as infile:
-        config = json.load(infile.read())
+        config = json.load(infile)
     # End with
 # End try/except block
 
