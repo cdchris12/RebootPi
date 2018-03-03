@@ -72,7 +72,7 @@ def reboot(name):
         'response' : response
     }
 
-    return render_template('pin.html', **templateData)
+    return render_template('reboot.html', **templateData)
 # End def
 
 if __name__ == "__main__":
