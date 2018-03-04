@@ -94,8 +94,8 @@ def Setup(config):
 
     # Setup all GPIO pins as either input or output devices
     for miner in miners:
-        GPIO.setup(miner['io_out_num'], GPIO.OUT, initial=GPIO.LOW)
-        GPIO.setup(miner['io_in_num'], GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+        GPIO.setup(miner.io_out_num, GPIO.OUT, initial=GPIO.LOW)
+        GPIO.setup(miner.io_in_num, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     # End for
 
     # Return the created miner object list
