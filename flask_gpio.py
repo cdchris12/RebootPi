@@ -104,7 +104,7 @@ def status(name):
         }
 
     except Exception as e:
-        response = "There was an error rebooting miner " + miner.name + "!\n" + str(e)
+        response = "There was an error rebooting miner " + name + "!\n" + str(e)
     # End try/except block
 
     templateData = {
