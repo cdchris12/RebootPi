@@ -144,7 +144,7 @@ def getTime():
 
 def getMiners():
     ret = []
-    for item in config['miners']:
+    for item in config['hosts']:
         ret.append(
             miner(name=item['name'],
             earl="%s:%s" % (item['url'], item['port']),
