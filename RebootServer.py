@@ -6,6 +6,7 @@ import requests
 import arrow
 import os
 import sys
+import json
 
 # Try loading the config file and die if not found
 try:
