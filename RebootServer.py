@@ -27,11 +27,12 @@ GPIO_pins = [7, 11, 12, 13, 15, 16, 18, 22, 29, 31, 32, 33, 35, 36, 37, 38, 40]
 miners = []
 
 class miner:
-    def __init__ (self, name, earl, io_out_num, io_in_num):
+    def __init__ (self, name, earl, port, io_out_num, io_in_num):
         self.io_in_num = io_in_num
         self.io_out_num = io_out_num
         self.earl = earl
         self.name = name
+        self.port = port
     # End def
 
     def healthCheck (self):
@@ -147,7 +148,8 @@ def getMiners():
     for item in config['hosts']:
         ret.append(
             miner(name=item['name'],
-            earl="%s:%s" % (item['url'], item['port']),
+            earl=item['url'],
+            port=item['port']),
             io_out_num=GPIO_pins[item['io_out_pin']],
             io_in_num=GPIO_pins[item['io_in_pin']])
         )

@@ -7,6 +7,7 @@ import sys
 import os
 import json
 from RebootServer import Setup, Cleanup
+from werkzeug.serving import WSGIRequestHandler
 app = Flask(__name__)
 
 # Try loading the config file and die if not found
@@ -116,6 +117,7 @@ def status(name):
 
 if __name__ == "__main__":
     try:
+        WSGIRequestHandler.protocol_version = "HTTP/1.1"
         app.run(host='0.0.0.0', port=config['server_port'], debug=True)
     except Exception:
         Cleanup()
