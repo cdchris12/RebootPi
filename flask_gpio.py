@@ -1,17 +1,12 @@
 #!/usr/bin/env python3
 
-# Listing of all GPIO pins we can use, 17 total
-GPIO_pins = [7, 11, 12, 13, 15, 16, 18, 22, 29, 31, 32, 33, 35, 36, 37, 38, 40]
-
-from time import sleep
-import requests
-import arrow
 from flask import Flask, render_template
 import datetime
 import RPi.GPIO as GPIO
 import sys
 import os
 import json
+from RebootServer import Setup, Cleanup
 app = Flask(__name__)
 
 # Try loading the config file and die if not found
@@ -26,12 +21,8 @@ else:
     # End with
 # End try/except block
 
-# Set the GPIO pins to use the board numbering scheme
-GPIO.setmode(GPIO.BOARD)
-# Disable warnings
-GPIO.setwarnings(False)
-# Setup all GPIO pins as output devices
-GPIO.setup(GPIO_pins, GPIO.OUT, initial=GPIO.LOW)
+# Setup our list of miner objects
+miners = Setup(config)
 
 @app.route("/")
 def hello():
@@ -46,32 +37,19 @@ def hello():
 @app.route("/reboot/<name>")
 def reboot(name):
     try:
-        for miner in config['hosts']:
-            if miner['name'] == name:
+        for miner in miners:
+            if miner.name == name:
                 break
             # End if
-        # End for
+        else:
+            raise Exception("Name not found")
+        # End for/else block
 
-        # Setup the GPIO pin as an output to simulate force reboot command
-        GPIO.setup(GPIO_pins[miner['io_pin']], GPIO.OUT)
+        miner.reboot()
 
-        # Close the circuit for 10 seconds
-        GPIO.output(GPIO_pins[miner['io_pin']], GPIO.HIGH)
-        sleep(10)
-        GPIO.output(GPIO_pins[miner['io_pin']], GPIO.LOW)
-
-        sleep(2)
-
-        # Close the circuit for 1 second to simulate power button press
-        GPIO.output(GPIO_pins[miner['io_pin']], GPIO.HIGH)
-        sleep(1)
-        GPIO.output(GPIO_pins[miner['io_pin']], GPIO.LOW)
-
-        response = "Successfully rebooted miner " + miner['name'] +"!"
-        GPIO.cleanup(GPIO_pins[miner['io_pin']])
+        response = "Successfully rebooted miner " + miner.name +"!"
     except Exception as e:
-        response = "There was an error rebooting miner " + miner['name'] + "!\n" + str(e)
-        GPIO.cleanup(GPIO_pins[miner['io_pin']])
+        response = "There was an error rebooting miner " + miner.name + "!\n" + str(e)
     # End try/except block
 
     templateData = {
@@ -82,6 +60,66 @@ def reboot(name):
     return render_template('reboot.html', **templateData)
 # End def
 
+@app.route("/status/<name>")
+def status(name):
+    try:
+        for miner in miners:
+            if miner.name == name:
+                break
+            # End if
+        else:
+            raise Exception("Name not found")
+        # End for/else block
+
+        status_code = miner.status()
+        # Returns a number which tells us the current state of this miner:
+        # 0: Power LED is off, indicating the miner is powered off.
+        # 1: Power LED on and mining software reachable.
+        # 2: Power LED on, but the mining software is unreachable.
+
+        if status_code == 0:
+            response = """<img style='align:center; display:block; width:100px; height:100px;' id='red_light' src='red_light.png' />
+            </br>
+            </br>
+            <p>Miner %s is currently completely powered off.</p>
+            """ % miner.name
+        elif status_code == 2:
+            response = """<img style='align:center; display:block; width:100px; height:100px;' id='red_light' src='yellow_light.png' />
+            </br>
+            </br>
+            <p>Miner %s is currently powered on, but the mining software is unreachable.</p>
+            """ % miner.name
+        elif status_code == 3:
+            response = """<img style='align:center; display:block; width:100px; height:100px;' id='red_light' src='green_light.png' />
+            </br>
+            </br>
+            <p>Miner %s is currently powered on and the mining software is reachable!</p>
+            """ % miner.name
+        # End if/else block
+
+        templateData = {
+            'title' : 'Miner %s status' % miner.name,
+            'response' : response
+        }
+
+    except Exception as e:
+        response = "There was an error rebooting miner " + miner.name + "!\n" + str(e)
+    # End try/except block
+
+    templateData = {
+        'title' : 'Miner %s status' % miner.name,
+        'response' : response
+    }
+
+    return render_template('reboot.html', **templateData)
+# End def
+
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=55555, debug=True)
+    try:
+        app.run(host='0.0.0.0', port=config['server_port'], debug=True)
+    except Exception:
+        Cleanup()
+    finally:
+        return(0)
+    # End try/except block
 # End if

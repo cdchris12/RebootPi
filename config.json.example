@@ -4,13 +4,16 @@
             "url": "http://example.com",
             "port": 9999,
             "name": "rig01",
-            "io_pin": 0
+            "io_out_pin": 0,
+            "io_in_pin": 16
         },
         {
             "url": "http://example.net",
             "port": 1234,
             "name": "rig02",
-            "io_pin": 1
+            "io_out_pin": 1,
+            "io_in_pin": 15
         }
-    ]
+    ],
+    'server_port': 1234
 }

@@ -1,22 +1,23 @@
 #!/usr/bin/env python3
 
+import RPi.GPIO as GPIO
+from time import sleep
+import requests
+import arrow
+import os
+import sys
 
 # Try loading the config file and die if not found
 try:
     os.stat("config.json")
 except Exception:
     print ("Config file missing!!!")
-    return(1)
+    sys.exit(1)
 else:
     with open('config.json', 'r') as infile:
         config = json.load(infile)
     # End with
 # End try/except block
-
-import RPi.GPIO as GPIO
-from time import sleep
-import requests
-import arrow
 
 # Listing of all GPIO pins we can use, 17 total
 GPIO_pins = [7, 11, 12, 13, 15, 16, 18, 22, 29, 31, 32, 33, 35, 36, 37, 38, 40]
@@ -25,11 +26,11 @@ GPIO_pins = [7, 11, 12, 13, 15, 16, 18, 22, 29, 31, 32, 33, 35, 36, 37, 38, 40]
 miners = []
 
 class miner:
-    def __init__ (self, name, earl, io_num, port):
-        self.io_num = io_num
+    def __init__ (self, name, earl, io_out_num, io_in_num):
+        self.io_in_num = io_in_num
+        self.io_out_num = io_out_num
         self.earl = earl
         self.name = name
-        self.port = port
     # End def
 
     def healthCheck (self):
@@ -48,31 +49,53 @@ class miner:
     # End def
 
     def change (self):
-        GPIO.output(self.io_num, GPIO.HIGH)
-        sleep(0.5)
-        GPIO.output(self.io_num, GPIO.LOW)
+        # Simulate a power button press
+        GPIO.output(self.io_out_num, GPIO.HIGH)
+        sleep(1)
+        GPIO.output(self.io_out_num, GPIO.LOW)
     # End def
 
     def reboot (self):
-        GPIO.output(self.io_num, GPIO.HIGH)
+        # Force the PC to shutoff
+        GPIO.output(self.io_out_num, GPIO.HIGH)
         sleep(10)
-        GPIO.output(self.io_num, GPIO.LOW)
+        GPIO.output(self.io_out_num, GPIO.LOW)
+
+        # Wait a second between operations
+        sleep(1)
+
+        # Turn the PC back on
         self.change()
     # End def
+
+    def status (self):
+        power = GPIO.input(self.io_in_num)
+        program = self.healthCheck()
+
+        if power and program:
+            return(1)
+        elif power and not program:
+            return(2)
+        else:
+            return(0)
+        # End if/else block
 # End class
 
-def Setup():
+def Setup(config):
     # Set the GPIO pins to use the board numbering scheme
     GPIO.setmode(GPIO.BOARD)
 
     # Disable warnings
     GPIO.setwarnings(False)
 
-    # Setup all GPIO pins as output devices
-    GPIO.setup(GPIO_pins, GPIO.OUT, initial=GPIO.LOW)
-
     # Create the miner objects
     miners = getMiners()
+
+    # Setup all GPIO pins as either input or output devices
+    for miner in miners:
+        GPIO.setup(miner['io_out_num'], GPIO.OUT, initial=GPIO.LOW)
+        GPIO.setup(miner['io_in_num'], GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    # End for
 
     # Return the created miner object list
     return miners
@@ -105,6 +128,7 @@ def RunServer(miners):
                     miner.reboot()
                 else:
                     #print("miner %s's health check passed!" % miner.name)
+                    pass
                 # End if/else block
             # End for
         # End while
@@ -118,11 +142,14 @@ def getTime():
 # End def
 
 def getMiners():
-    global miners
-
     ret = []
     for item in config['miners']:
-        ret.append( miner(name=item['name'], earl="%s:%s" % (item['url'], item['port']), io_num=GPIO_pins[item['io_num']]))
+        ret.append(
+            miner(name=item['name'],
+            earl="%s:%s" % (item['url'], item['port']),
+            io_out_num=GPIO_pins[item['io_out_pin']],
+            io_in_num=GPIO_pins[item['io_in_pin']])
+        )
     # End for
 
     return ret
