@@ -39,9 +39,10 @@ class miner:
         # Returns True/False based on a good or bad health check.
         try:
             r = requests.get("%s:%s" % (self.earl, self.port), timeout=10)
-        except (requests.exceptions.Timeout, requests.exceptions.ConnectTimeout):
+        except (requests.exceptions.Timeout, requests.exceptions.ConnectTimeout) as e:
             # Timeout means we can reach the host, but the service isn't running
             # ConnectTimeout means we can't reach the host at all.
+            print (str(e))
             return False
         else:
             if r.status_code == 200:
