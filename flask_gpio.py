@@ -120,6 +120,6 @@ if __name__ == "__main__":
     except Exception:
         Cleanup()
     finally:
-        return(0)
+        sys.exit(0)
     # End try/except block
 # End if

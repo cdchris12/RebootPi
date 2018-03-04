@@ -162,7 +162,7 @@ def main():
     except Exception:
         Cleanup()
     finally:
-        return(0)
+        sys.exit(0)
     # End try/except block
 # End def
 
