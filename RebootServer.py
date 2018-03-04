@@ -149,9 +149,9 @@ def getMiners():
         ret.append(
             miner(name=item['name'],
             earl=item['url'],
-            port=item['port']),
+            port=item['port'],
             io_out_num=GPIO_pins[item['io_out_pin']],
-            io_in_num=GPIO_pins[item['io_in_pin']]
+            io_in_num=GPIO_pins[item['io_in_pin']])
         )
     # End for
 
