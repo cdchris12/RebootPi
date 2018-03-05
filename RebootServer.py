@@ -42,7 +42,6 @@ class miner:
         except (requests.exceptions.Timeout, requests.exceptions.ConnectTimeout, requests.exceptions.ConnectionError) as e:
             # Timeout means we can reach the host, but the service isn't running
             # ConnectTimeout or ConnectionError means we can't reach the host at all.
-            print (str(e))
             return False
         else:
             if r.status_code == 200:
