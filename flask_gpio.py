@@ -79,19 +79,19 @@ def status(name):
         # 2: Power LED on, but the mining software is unreachable.
 
         if status_code == 0:
-            response = """<img style='align:center; display:block; width:100px; height:100px;' id='red_light' src='red_light.png' />
+            response = """<img style='align:center; display:block; width:100px; height:100px;' id='red_light' src='static/red_light.png' />
             </br>
             </br>
             <p>Miner %s is currently completely powered off.</p>
             """ % miner.name
         elif status_code == 2:
-            response = """<img style='align:center; display:block; width:100px; height:100px;' id='red_light' src='yellow_light.png' />
+            response = """<img style='align:center; display:block; width:100px; height:100px;' id='red_light' src='static/yellow_light.png' />
             </br>
             </br>
             <p>Miner %s is currently powered on, but the mining software is unreachable.</p>
             """ % miner.name
         elif status_code == 3:
-            response = """<img style='align:center; display:block; width:100px; height:100px;' id='red_light' src='green_light.png' />
+            response = """<img style='align:center; display:block; width:100px; height:100px;' id='red_light' src='static/green_light.png' />
             </br>
             </br>
             <p>Miner %s is currently powered on and the mining software is reachable!</p>
@@ -118,7 +118,7 @@ def status(name):
 if __name__ == "__main__":
     try:
         WSGIRequestHandler.protocol_version = "HTTP/1.1"
-        app.run(host='0.0.0.0', port=config['server_port'], debug=True)
+        app.run(host='0.0.0.0', port=config['server_port'], debug=True, static_url_path='/static')
     except Exception:
         Cleanup()
     finally:
