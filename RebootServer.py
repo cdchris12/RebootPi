@@ -41,7 +41,7 @@ class miner:
             r = requests.get("%s:%s" % (self.earl, self.port), timeout=10)
         except (requests.exceptions.Timeout, requests.exceptions.ConnectTimeout, requests.exceptions.ConnectionError) as e:
             # Timeout means we can reach the host, but the service isn't running
-            # ConnectTimeout means we can't reach the host at all.
+            # ConnectTimeout or ConnectionError means we can't reach the host at all.
             print (str(e))
             return False
         else:

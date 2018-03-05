@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from flask import Flask, render_template
+from flask import Flask, render_template, Markup
 import datetime
 import RPi.GPIO as GPIO
 import sys
@@ -100,7 +100,7 @@ def status(name):
 
         templateData = {
             'title' : 'Miner %s status' % miner.name,
-            'response' : response
+            'response' : Markup(response)
         }
 
     except Exception as e:
@@ -112,7 +112,7 @@ def status(name):
         'response' : response
     }
 
-    return render_template('reboot.html', **templateData)
+    return render_template('status.html', **templateData)
 # End def
 
 if __name__ == "__main__":
