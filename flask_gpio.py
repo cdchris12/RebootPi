@@ -39,7 +39,7 @@ def hello():
 def reboot(name):
     try:
         if name in miners.keys():
-            miner = miners[miner]
+            miner = miners[name]
         else:
             raise Exception("Name not found")
         # End if/else block
@@ -69,7 +69,7 @@ def reboot(name):
 def change(name):
     try:
         if name in miners.keys():
-            miner = miners[miner]
+            miner = miners[name]
         else:
             raise Exception("Name not found")
         # End if/else block
@@ -99,7 +99,7 @@ def change(name):
 def status(name):
     try:
         if name in miners.keys():
-            miner = miners[miner]
+            miner = miners[name]
         else:
             raise Exception("Name not found")
         # End if/else block
