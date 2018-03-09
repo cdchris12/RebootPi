@@ -38,16 +38,16 @@ def hello():
 @app.route("/reboot/<name>") # Need to pass a parameter called `pass` as well
 def reboot(name):
     try:
-        password = request.args.get('pass')
-        if not password == config['password']:
-            raise Exception("Invalid password!")
-        # End if
-
         if name in miners:
             miner = miners[miner]
         else:
             raise Exception("Name not found")
         # End if/else block
+
+        password = request.args.get('pass')
+        if not password == config['password']:
+            raise Exception("Invalid password!")
+        # End if
 
         miner.reboot()
 
@@ -67,16 +67,16 @@ def reboot(name):
 @app.route("/change/<name>") # Need to pass a parameter called `pass` as well
 def change(name):
     try:
-        password = request.args.get('pass')
-        if not password == config['password']:
-            raise Exception("Invalid password!")
-        # End if
-
         if name in miners:
             miner = miners[miner]
         else:
             raise Exception("Name not found")
         # End if/else block
+
+        password = request.args.get('pass')
+        if not password == config['password']:
+            raise Exception("Invalid password!")
+        # End if
 
         miner.change()
 
@@ -96,16 +96,16 @@ def change(name):
 @app.route("/status/<name>") # Need to pass a parameter called `pass` as well
 def status(name):
     try:
-        password = request.args.get('pass')
-        if not password == config['password']:
-            raise Exception("Invalid password!")
-        # End if
-
         if name in miners:
             miner = miners[miner]
         else:
             raise Exception("Name not found")
         # End if/else block
+        
+        password = request.args.get('pass')
+        if not password == config['password']:
+            raise Exception("Invalid password!")
+        # End if
 
         status_code = miner.status()
         # Returns a number which tells us the current state of this miner:
