@@ -54,16 +54,16 @@ class miner:
 
     def change (self):
         # Simulate a power button press
-        GPIO.output(self.io_out_num, GPIO.HIGH)
-        sleep(1)
         GPIO.output(self.io_out_num, GPIO.LOW)
+        sleep(1)
+        GPIO.output(self.io_out_num, GPIO.HIGH)
     # End def
 
     def reboot (self):
         # Force the PC to shutoff
-        GPIO.output(self.io_out_num, GPIO.HIGH)
-        sleep(10)
         GPIO.output(self.io_out_num, GPIO.LOW)
+        sleep(10)
+        GPIO.output(self.io_out_num, GPIO.HIGH)
 
         # Wait a second between operations
         sleep(1)
@@ -97,8 +97,8 @@ def Setup(config):
 
     # Setup all GPIO pins as either input or output devices
     for miner in miners:
-        GPIO.setup(miner.io_out_num, GPIO.OUT, initial=GPIO.LOW)
-        GPIO.setup(miner.io_in_num, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+        GPIO.setup(miner.io_out_num, GPIO.OUT, initial=GPIO.UP)
+        GPIO.setup(miner.io_in_num, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     # End for
 
     # Return the created miner object list
