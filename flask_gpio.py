@@ -38,7 +38,7 @@ def hello():
 @app.route("/reboot/<name>") # Need to pass a parameter called `pass` as well
 def reboot(name):
     try:
-        if name in miners:
+        if name in miners.keys():
             miner = miners[miner]
         else:
             raise Exception("Name not found")
@@ -67,7 +67,7 @@ def reboot(name):
 @app.route("/change/<name>") # Need to pass a parameter called `pass` as well
 def change(name):
     try:
-        if name in miners:
+        if name in miners.keys():
             miner = miners[miner]
         else:
             raise Exception("Name not found")
@@ -96,12 +96,12 @@ def change(name):
 @app.route("/status/<name>") # Need to pass a parameter called `pass` as well
 def status(name):
     try:
-        if name in miners:
+        if name in miners.keys():
             miner = miners[miner]
         else:
             raise Exception("Name not found")
         # End if/else block
-        
+
         password = request.args.get('pass')
         if not password == config['password']:
             raise Exception("Invalid password!")

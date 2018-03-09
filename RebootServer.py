@@ -126,7 +126,7 @@ def RunServer(miners):
             sleep(300)
 
             #print("Starting regular checks at %s..." % getTime())
-            for miner in miners:
+            for miner in miners.keys():
                 if not miners[miner].healthCheck():
                     #print("Miner %s wasn't responding, so we're rebooting it!" % miner.name)
                     miners[miner].reboot()
