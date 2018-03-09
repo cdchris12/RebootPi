@@ -96,9 +96,9 @@ def Setup(config):
     miners = getMiners()
 
     # Setup all GPIO pins as either input or output devices
-    for miner in miners:
-        GPIO.setup(miner.io_out_num, GPIO.OUT, initial=GPIO.HIGH)
-        GPIO.setup(miner.io_in_num, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    for miner in miners.keys():
+        GPIO.setup(miners[miner].io_out_num, GPIO.OUT, initial=GPIO.HIGH)
+        GPIO.setup(miners[miner].io_in_num, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     # End for
 
     # Return the created miner object list
@@ -112,9 +112,9 @@ def Cleanup():
 
 def RunServer(miners):
     # First, we want to make sure all the miners are at least turned on
-    for miner in miners:
-        if not miner.healthCheck():
-            miner.change()
+    for miner in miners.keys():
+        if not miners[miner].healthCheck():
+            miners[miner].change()
             #print("Started miner %s!" % (miner.name))
         else:
             #print("Miner %s already running!" % (miner.name))
@@ -127,9 +127,9 @@ def RunServer(miners):
 
             #print("Starting regular checks at %s..." % getTime())
             for miner in miners:
-                if not miner.healthCheck():
+                if not miners[miner].healthCheck():
                     #print("Miner %s wasn't responding, so we're rebooting it!" % miner.name)
-                    miner.reboot()
+                    miners[miner].reboot()
                 else:
                     #print("miner %s's health check passed!" % miner.name)
                     pass
@@ -146,9 +146,9 @@ def getTime():
 # End def
 
 def getMiners():
-    ret = []
+    ret = {}
     for item in config['hosts']:
-        ret.append(
+        ret[item['name']] = (
             miner(name=item['name'],
             earl=item['url'],
             port=item['port'],

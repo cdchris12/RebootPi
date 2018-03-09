@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from flask import Flask, render_template, Markup
+from flask import Flask, render_template, Markup, request
 import datetime
 import RPi.GPIO as GPIO
 import sys
@@ -35,16 +35,19 @@ def hello():
     }
     return render_template('main.html', **templateData)
 
-@app.route("/reboot/<name>")
+@app.route("/reboot/<name>") # Need to pass a parameter called `pass` as well
 def reboot(name):
     try:
-        for miner in miners:
-            if miner.name == name:
-                break
-            # End if
+        password = request.args.get('pass')
+        if not password == config['password']:
+            raise Exception("Invalid password!")
+        # End if
+
+        if name in miners:
+            miner = miners[miner]
         else:
             raise Exception("Name not found")
-        # End for/else block
+        # End if/else block
 
         miner.reboot()
 
@@ -54,23 +57,55 @@ def reboot(name):
     # End try/except block
 
     templateData = {
-        'title' : 'Reboot status',
+        'title' : 'Miner "%s" Reboot Status',
         'response' : response
     }
 
     return render_template('reboot.html', **templateData)
 # End def
 
-@app.route("/status/<name>")
-def status(name):
+@app.route("/change/<name>") # Need to pass a parameter called `pass` as well
+def change(name):
     try:
-        for miner in miners:
-            if miner.name == name:
-                break
-            # End if
+        password = request.args.get('pass')
+        if not password == config['password']:
+            raise Exception("Invalid password!")
+        # End if
+
+        if name in miners:
+            miner = miners[miner]
         else:
             raise Exception("Name not found")
-        # End for/else block
+        # End if/else block
+
+        miner.change()
+
+        response = "Successfully changed the state of miner " + miner.name +"!"
+    except Exception as e:
+        response = "There was an error changing the state of miner " + miner.name + "!\n" + str(e)
+    # End try/except block
+
+    templateData = {
+        'title' : 'Miner "%s" State Change Status',
+        'response' : response
+    }
+
+    return render_template('change.html', **templateData)
+# End def
+
+@app.route("/status/<name>") # Need to pass a parameter called `pass` as well
+def status(name):
+    try:
+        password = request.args.get('pass')
+        if not password == config['password']:
+            raise Exception("Invalid password!")
+        # End if
+
+        if name in miners:
+            miner = miners[miner]
+        else:
+            raise Exception("Name not found")
+        # End if/else block
 
         status_code = miner.status()
         # Returns a number which tells us the current state of this miner:
@@ -108,7 +143,7 @@ def status(name):
     # End try/except block
 
     templateData = {
-        'title' : 'Miner %s status' % miner.name,
+        'title' : 'Miner "%s" Status' % miner.name,
         'response' : response
     }
 

@@ -15,5 +15,6 @@
             "io_in_pin": 15
         }
     ],
-    'server_port': 1234
+    "server_port": 1234,
+    "password": "abc123"
 }
