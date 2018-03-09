@@ -48,7 +48,7 @@ def reboot(name):
         password = request.args.get('pass')
         print (password)
         if not password == config['password']:
-            return flask.redirect('/401')
+            return flask.abort(403)
             raise Exception("Invalid password!")
         # End if
 
@@ -79,7 +79,7 @@ def change(name):
         password = request.args.get('pass')
         print (password)
         if not password == config['password']:
-            return flask.redirect('/401')
+            return flask.abort(403)
             raise Exception("Invalid password!")
         # End if
 
@@ -110,7 +110,7 @@ def status(name):
         password = request.args.get('pass')
         print (password)
         if not password == config['password']:
-            return flask.redirect('/401')
+            return flask.abort(403)
             raise Exception("Invalid password!")
         # End if
 
@@ -157,9 +157,9 @@ def status(name):
     return render_template('status.html', **templateData)
 # End def
 
-@app.errorhandler(401)
+@app.errorhandler(403)
 def page_not_found(e):
-    return "You are not authorized to view this page!"
+    return "You are not authorized to view this page!", 403
 # End def
 
 if __name__ == "__main__":
