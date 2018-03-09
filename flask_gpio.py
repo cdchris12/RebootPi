@@ -66,7 +66,7 @@ def reboot(name):
 # End def
 
 @app.route("/change/<name>") # Need to pass a parameter called `pass` as well
-def change(name, pass=""):
+def change(name):
     try:
         if name in miners.keys():
             miner = miners[miner]
