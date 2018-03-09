@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from flask import Flask, render_template, Markup, request
+import flask
 import datetime
 import RPi.GPIO as GPIO
 import sys
