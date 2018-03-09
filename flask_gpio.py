@@ -35,7 +35,7 @@ def hello():
     }
     return render_template('main.html', **templateData)
 
-@app.route("/reboot/<name>") # Need to pass a parameter called `pass` as well
+@app.route("/reboot/<name>", defaults={'pass': None}) # Need to pass a parameter called `pass` as well
 def reboot(name):
     try:
         if name in miners.keys():
@@ -64,7 +64,7 @@ def reboot(name):
     return render_template('reboot.html', **templateData)
 # End def
 
-@app.route("/change/<name>") # Need to pass a parameter called `pass` as well
+@app.route("/change/<name>", defaults={'pass': None}) # Need to pass a parameter called `pass` as well
 def change(name):
     try:
         if name in miners.keys():
@@ -93,7 +93,7 @@ def change(name):
     return render_template('change.html', **templateData)
 # End def
 
-@app.route("/status/<name>") # Need to pass a parameter called `pass` as well
+@app.route("/status/<name>", defaults={'pass': None}) # Need to pass a parameter called `pass` as well
 def status(name):
     try:
         if name in miners.keys():
