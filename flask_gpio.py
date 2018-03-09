@@ -167,7 +167,7 @@ def page_not_found(e):
 
 @app.errorhandler(400)
 def page_not_found(e):
-    return "Your request was malformed. Did you use a password? Is it correct?", 400
+    return "Your request was malformed. Double check the miner name you provided, maybe?", 400
 # End def
 
 if __name__ == "__main__":
