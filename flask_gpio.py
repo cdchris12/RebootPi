@@ -52,9 +52,9 @@ def reboot(name):
 
         miner.reboot()
 
-        response = "Successfully rebooted miner " + miner.name +"!"
+        response = "Successfully rebooted miner " + name +"!"
     except Exception as e:
-        response = "There was an error rebooting miner " + miner.name + "!\n" + str(e)
+        response = "There was an error rebooting miner " + name + "!\n" + str(e)
     # End try/except block
 
     templateData = {
@@ -82,9 +82,9 @@ def change(name):
 
         miner.change()
 
-        response = "Successfully changed the state of miner " + miner.name +"!"
+        response = "Successfully changed the state of miner " + name +"!"
     except Exception as e:
-        response = "There was an error changing the state of miner " + miner.name + "!\n" + str(e)
+        response = "There was an error changing the state of miner " + name + "!\n" + str(e)
     # End try/except block
 
     templateData = {
