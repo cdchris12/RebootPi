@@ -35,7 +35,7 @@ def hello():
     }
     return render_template('main.html', **templateData)
 
-@app.route("/reboot/<name>", defaults={'pa': None}) # Need to pass a parameter called `pass` as well
+@app.route("/reboot/<name>") # Need to pass a parameter called `pass` as well
 def reboot(name):
     try:
         if name in miners.keys():
