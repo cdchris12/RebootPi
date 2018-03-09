@@ -35,7 +35,7 @@ def hello():
     }
     return render_template('main.html', **templateData)
 
-@app.route("/reboot/<name>", defaults={'pass': None}) # Need to pass a parameter called `pass` as well
+@app.route("/reboot/<name>", defaults={'pa': None}) # Need to pass a parameter called `pass` as well
 def reboot(name):
     try:
         if name in miners.keys():
@@ -45,6 +45,7 @@ def reboot(name):
         # End if/else block
 
         password = request.args.get('pass')
+        print (password)
         if not password == config['password']:
             raise Exception("Invalid password!")
         # End if
@@ -64,8 +65,8 @@ def reboot(name):
     return render_template('reboot.html', **templateData)
 # End def
 
-@app.route("/change/<name>", defaults={'pass': None}) # Need to pass a parameter called `pass` as well
-def change(name):
+@app.route("/change/<name>") # Need to pass a parameter called `pass` as well
+def change(name, pass=""):
     try:
         if name in miners.keys():
             miner = miners[miner]
@@ -74,6 +75,7 @@ def change(name):
         # End if/else block
 
         password = request.args.get('pass')
+        print (password)
         if not password == config['password']:
             raise Exception("Invalid password!")
         # End if
@@ -93,7 +95,7 @@ def change(name):
     return render_template('change.html', **templateData)
 # End def
 
-@app.route("/status/<name>", defaults={'pass': None}) # Need to pass a parameter called `pass` as well
+@app.route("/status/<name>") # Need to pass a parameter called `pass` as well
 def status(name):
     try:
         if name in miners.keys():
@@ -103,6 +105,7 @@ def status(name):
         # End if/else block
 
         password = request.args.get('pass')
+        print (password)
         if not password == config['password']:
             raise Exception("Invalid password!")
         # End if
