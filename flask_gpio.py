@@ -40,7 +40,7 @@ miners = Setup(config)
 # Setup our queue to pass along process objects for joining by our Joiner subprocess
 p_queue = Queue()
 
-class Joiner(Thread):
+class Joiner(Process):
     def __init__(self, q):
         self.__q = q
     # End def
