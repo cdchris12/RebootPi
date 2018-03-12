@@ -1,17 +1,28 @@
 #!/usr/bin/env python3
 
-from flask import Flask, render_template, Markup, request
 import flask
 import datetime
-import RPi.GPIO as GPIO
 import sys
 import os
 import json
+import argparse
+import RPi.GPIO as GPIO
+
 from RebootServer import Setup, Cleanup
+from flask import Flask, render_template, Markup, request
 from werkzeug.serving import WSGIRequestHandler
+from multiprocessing import Pool, TimeoutError, cpu_count, Process, Queue
+
 app = Flask(__name__)
 
+#TODO: Should we allow enabling/disabling multiprocessing? I think not.
+# Parse the arguments
+#parser = argparse.ArgumentParser()
+#parser.add_argument('-m', '--multiprocessing', type=int, default=0, choices=range(2, cpu_count()+1), help='Enter the degree of multiprocessing you\'d like to use for significantly faster computation of large statistical analyses.')
+#args = parser.parse_args()
+
 # Try loading the config file and die if not found
+#TODO: Add CLI arg for different config file?
 try:
     os.stat("config.json")
 except Exception:
@@ -25,6 +36,25 @@ else:
 
 # Setup our list of miner objects
 miners = Setup(config)
+
+# Setup our queue to pass along process objects for joining by our Joiner subprocess
+p_queue = Queue()
+
+class Joiner(Thread):
+    def __init__(self, q):
+        self.__q = q
+    # End def
+
+    def run(self):
+        while True:
+            child = self.__q.get()
+            if child == None:
+                return
+            # End if
+            child.join()
+        # End while
+    # End def
+# End class
 
 @app.route("/")
 def hello():
@@ -53,7 +83,8 @@ def reboot(name):
         #raise Exception("Invalid password!")
     # End if
 
-    miner.reboot()
+    p_queue.put(Process(target=miner.reboot, args=()))
+    #miner.reboot()
 
     response = "Successfully rebooted miner " + name +"!"
     #except Exception as e:
@@ -85,7 +116,8 @@ def change(name):
         #raise Exception("Invalid password!")
     # End if
 
-    miner.change()
+    p_queue.put(Process(target=miner.change, args=()))
+    #miner.change()
 
     response = "Successfully changed the state of miner " + name +"!"
     #except Exception as e:
@@ -174,9 +206,10 @@ if __name__ == "__main__":
     try:
         WSGIRequestHandler.protocol_version = "HTTP/1.1"
         app.run(host='0.0.0.0', port=config['server_port'], debug=True)
-    except Exception:
+    except (KeyboardInterrupt, SystemExit):
         Cleanup()
     finally:
         sys.exit(0)
+        p_queue.put(None)
     # End try/except block
 # End if
