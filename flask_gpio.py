@@ -151,13 +151,13 @@ def status(name):
         <p>Miner %s is currently completely powered off.</p>
         """ % miner.name
     elif status_code == 2:
-        response = """<img style='align:center; display:block; width:100px; height:100px;' id='red_light' src='/static/yellow_light.png' />
+        response = """<img style='align:center; display:block; width:100px; height:100px;' id='yellow_light' src='/static/yellow_light.png' />
         </br>
         </br>
         <p>Miner %s is currently powered on, but the mining software is unreachable.</p>
         """ % miner.name
-    elif status_code == 3:
-        response = """<img style='align:center; display:block; width:100px; height:100px;' id='red_light' src='/static/green_light.png' />
+    elif status_code == 1:
+        response = """<img style='align:center; display:block; width:100px; height:100px;' id='green_light' src='/static/green_light.png' />
         </br>
         </br>
         <p>Miner %s is currently powered on and the mining software is reachable!</p>
@@ -209,10 +209,12 @@ def statusAll():
         if results[item] == 0:
             symbols += "<td>" + "<img style='align:center; display:block; width:100px; height:100px;' id='red_light' src='/static/red_light.png' />" + "</td>"
         elif results[item] == 1:
-            symbols += "<td>" + "<img style='align:center; display:block; width:100px; height:100px;' id='red_light' src='/static/green_light.png' />" + "</td>"
+            symbols += "<td>" + "<img style='align:center; display:block; width:100px; height:100px;' id='green_light' src='/static/green_light.png' />" + "</td>"
         elif results[item] == 2:
-            symbols += "<td>" + "<img style='align:center; display:block; width:100px; height:100px;' id='red_light' src='/static/yellow_light.png' />" + "</td>"
-        # End else/if block
+            symbols += "<td>" + "<img style='align:center; display:block; width:100px; height:100px;' id='yellow_light' src='/static/yellow_light.png' />" + "</td>"
+        else:
+            print (results[item])
+        # End if/else block
     # End for
 
     for item in s_keys:
