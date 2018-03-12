@@ -83,7 +83,8 @@ def reboot(name):
         #raise Exception("Invalid password!")
     # End if
 
-    p_queue.put(Process(target=miner.reboot, args=()))
+    p = Process(target=miner.reboot, args=())
+    p_queue.put(p)
     #miner.reboot()
 
     response = "Successfully rebooted miner " + name +"!"
@@ -116,7 +117,8 @@ def change(name):
         #raise Exception("Invalid password!")
     # End if
 
-    p_queue.put(Process(target=miner.change, args=()))
+    p = Process(target=miner.change, args=())
+    p_queue.put(p)
     #miner.change()
 
     response = "Successfully changed the state of miner " + name +"!"
@@ -204,6 +206,7 @@ def page_not_found(e):
 
 if __name__ == "__main__":
     try:
+        joiner = Process(target=Joiner, args=(p_queue))
         WSGIRequestHandler.protocol_version = "HTTP/1.1"
         app.run(host='0.0.0.0', port=config['server_port'], debug=True)
     except (KeyboardInterrupt, SystemExit):
