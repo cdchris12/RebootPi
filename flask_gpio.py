@@ -13,15 +13,9 @@ import RPi.GPIO as GPIO
 from RebootServer import Setup, Cleanup
 from flask import Flask, render_template, Markup, request
 from werkzeug.serving import WSGIRequestHandler
-from multiprocessing import Pool, TimeoutError, cpu_count, Process, Queue
+from multiprocessing import Process
 
 app = Flask(__name__)
-
-#TODO: Should we allow enabling/disabling multiprocessing? I think not.
-# Parse the arguments
-#parser = argparse.ArgumentParser()
-#parser.add_argument('-m', '--multiprocessing', type=int, default=0, choices=range(2, cpu_count()+1), help='Enter the degree of multiprocessing you\'d like to use for significantly faster computation of large statistical analyses.')
-#args = parser.parse_args()
 
 # Try loading the config file and die if not found
 #TODO: Add CLI arg for different config file?
@@ -38,25 +32,6 @@ else:
 
 # Setup our list of miner objects
 miners = Setup(config)
-
-# Setup our queue to pass along process objects for joining by our Joiner subprocess
-p_queue = Queue()
-
-class Joiner(Process):
-    def __init__(self, q):
-        self.__q = q
-    # End def
-
-    def run(self):
-        while True:
-            child = self.__q.get()
-            if child == None:
-                return
-            # End if
-            child.join()
-        # End while
-    # End def
-# End class
 
 def makeJoiner(q):
     a = Joiner(q)
@@ -215,15 +190,12 @@ def page_not_found(e):
 
 if __name__ == "__main__":
     try:
-        #joiner = Process(target=makeJoiner, args=(p_queue,))
-        #joiner.start()
         WSGIRequestHandler.protocol_version = "HTTP/1.1"
         app.run(host='0.0.0.0', port=config['server_port'], debug=True)
     except (KeyboardInterrupt, SystemExit):
         Cleanup()
     finally:
         sys.exit(0)
-        p_queue.put(None)
         print (multiprocessing.active_children())
         #joiner.join()
     # End try/except block
