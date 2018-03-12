@@ -221,7 +221,19 @@ def statusAll():
         names += "<td>" + item + "</td>"
     # End for
 
-    response = "<tr>" + symbols + "</tr><tr>" + names + "</tr>"
+    response = """<tr>
+    %s
+    </tr><tr>
+    %s
+    </td>
+    </br>
+    </br>
+    <p>
+    Red: Power LED is off, indicating the miner is powered off.</br>
+    Green: Power LED on and mining software reachable.</br>
+    Yellow: Power LED on, but the mining software is unreachable.</p>
+    """ % (symbols, names)
+    #response = "<tr>" + symbols + "</tr><tr>" + names + "</tr>"
 
     templateData = {
         'title' : 'Farm status',
