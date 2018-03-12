@@ -56,6 +56,11 @@ class Joiner(Process):
     # End def
 # End class
 
+def makeJoiner(q):
+    a = Joiner(q)
+    a.run()
+# End def
+
 @app.route("/")
 def hello():
     now = datetime.datetime.now()
@@ -206,7 +211,7 @@ def page_not_found(e):
 
 if __name__ == "__main__":
     try:
-        joiner = Process(target=Joiner, args=(p_queue))
+        joiner = Process(target=makeJoiner, args=(p_queue,))
         WSGIRequestHandler.protocol_version = "HTTP/1.1"
         app.run(host='0.0.0.0', port=config['server_port'], debug=True)
     except (KeyboardInterrupt, SystemExit):
