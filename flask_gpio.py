@@ -219,7 +219,7 @@ def statusAll():
         names += "<td>" + item + "</td>"
     # End for
 
-    ret = "<tr>" + symbols + "</tr><tr>" + names + "</tr>"
+    response = "<tr>" + symbols + "</tr><tr>" + names + "</tr>"
 
     templateData = {
         'title' : 'Farm status',
