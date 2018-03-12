@@ -225,7 +225,7 @@ def statusAll():
     %s\
     </tr><tr>\
     %s\
-    </td>\
+    </td></tr>\
     </br>\
     </br>\
     <p>\
