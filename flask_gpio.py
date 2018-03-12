@@ -34,7 +34,7 @@ else:
 miners = Setup(config)
 
 # Setup our results queue
-r_queue = Queue
+r_queue = Queue()
 
 def makeJoiner(q):
     a = Joiner(q)
