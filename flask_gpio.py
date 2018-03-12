@@ -89,6 +89,7 @@ def reboot(name):
     # End if
 
     p = Process(target=miner.reboot, args=())
+    p.start()
     p_queue.put(p)
     #miner.reboot()
 
@@ -123,6 +124,7 @@ def change(name):
     # End if
 
     p = Process(target=miner.change, args=())
+    p.start()
     p_queue.put(p)
     #miner.change()
 
@@ -212,6 +214,7 @@ def page_not_found(e):
 if __name__ == "__main__":
     try:
         joiner = Process(target=makeJoiner, args=(p_queue,))
+        joiner.start()
         WSGIRequestHandler.protocol_version = "HTTP/1.1"
         app.run(host='0.0.0.0', port=config['server_port'], debug=True)
     except (KeyboardInterrupt, SystemExit):
@@ -219,5 +222,6 @@ if __name__ == "__main__":
     finally:
         sys.exit(0)
         p_queue.put(None)
+        joiner.join()
     # End try/except block
 # End if
