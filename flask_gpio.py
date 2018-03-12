@@ -13,7 +13,7 @@ import RPi.GPIO as GPIO
 from RebootServer import Setup, Cleanup
 from flask import Flask, render_template, Markup, request
 from werkzeug.serving import WSGIRequestHandler
-from multiprocessing import Process
+from multiprocessing import Pool, TimeoutError, cpu_count, Process, Queue
 
 app = Flask(__name__)
 
@@ -32,6 +32,9 @@ else:
 
 # Setup our list of miner objects
 miners = Setup(config)
+
+# Setup our results queue
+r_queue = Queue
 
 def makeJoiner(q):
     a = Joiner(q)
@@ -166,16 +169,63 @@ def status(name):
         'response' : Markup(response)
     }
 
-    #except Exception as e:
-    #    response = "There was an error rebooting miner " + name + "!\n" + str(e)
-    # End try/except block
+    return render_template('status.html', **templateData)
+# End def
+
+@app.route("/statusAll") # Need to pass a parameter called `pass` as well
+def statusAll():
+    password = request.args.get('pass')
+    print (password)
+    if not password == config['password']:
+        return flask.abort(403)
+        #raise Exception("Invalid password!")
+    # End if
+
+    processes = []
+    for miner in miners:
+        p = Process(target=miner.status, args=(r_queue))
+        p.start()
+        processes.append(p)
+    # End for
+
+    for process in processes:
+        process.join()
+    # End for
+
+    results = {}
+    while not r_queue.empty():
+        res = r_queue.get()
+        results[res[0]] = res[1]
+    # End while
+
+    # Create a sorted list of the keys in our results dict
+    s_keys = sorted(results.keys())
+
+    symbols = ""
+    names = ""
+
+    for item in s_keys:
+        if results[item] == 0:
+            symbols += "<td>" + "<img style='align:center; display:block; width:100px; height:100px;' id='red_light' src='/static/red_light.png' />" + "</td>"
+        elif results[item] == 1:
+            symbols += "<td>" + "<img style='align:center; display:block; width:100px; height:100px;' id='red_light' src='/static/green_light.png' />" + "</td>"
+        elif results[item] == 2:
+            symbols += "<td>" + "<img style='align:center; display:block; width:100px; height:100px;' id='red_light' src='/static/yellow_light.png' />" + "</td>"
+        # End else/if block
+    # End for
+
+    for item in s_keys:
+        names += "<td>" + item + "</td>"
+    # End for
+
+    ret = "<tr>" + symbols + "</tr><tr>" + names + "</tr>"
 
     templateData = {
-        'title' : 'Miner "%s" Status' % miner.name,
-        'response' : response
+        'title' : 'Farm status',
+        'response' : Markup(response)
     }
 
-    return render_template('status.html', **templateData)
+    return render_template('fstatus.html', **templateData)
 # End def
 
 @app.errorhandler(403)
@@ -196,7 +246,8 @@ if __name__ == "__main__":
         Cleanup()
     finally:
         sys.exit(0)
-        print (multiprocessing.active_children())
-        #joiner.join()
+        for item in multiprocessing.active_children():
+            item.join()
+        # End for
     # End try/except block
 # End if
