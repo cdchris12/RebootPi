@@ -221,22 +221,20 @@ def statusAll():
         names += "<td>" + item + "</td>"
     # End for
 
-    response = "<tr>\
-    %s\
-    </tr><tr>\
-    %s\
-    </td></tr>\
+    response = "<tr>" + symbols + "</tr><tr>" + names + "</tr>"
+
+    explaination = "\
     </br>\
     </br>\
     <p>\
     Red: Power LED is off, indicating the miner is powered off.</br>\
     Green: Power LED on and mining software reachable.</br>\
-    Yellow: Power LED on, but the mining software is unreachable.</p>" % (symbols, names)
-    #response = "<tr>" + symbols + "</tr><tr>" + names + "</tr>"
+    Yellow: Power LED on, but the mining software is unreachable.</p>"
 
     templateData = {
         'title' : 'Farm status',
-        'response' : Markup(response)
+        'response' : Markup(response),
+        'explaination' : Markup(explaination)
     }
 
     return render_template('fstatus.html', **templateData)
