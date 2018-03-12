@@ -90,7 +90,7 @@ def reboot(name):
 
     p = Process(target=miner.reboot, args=())
     p.start()
-    p_queue.put(p)
+    print (multiprocessing.active_children())
     #miner.reboot()
 
     response = "Successfully rebooted miner " + name +"!"
@@ -125,7 +125,7 @@ def change(name):
 
     p = Process(target=miner.change, args=())
     p.start()
-    p_queue.put(p)
+    print (multiprocessing.active_children())
     #miner.change()
 
     response = "Successfully changed the state of miner " + name +"!"
@@ -213,8 +213,8 @@ def page_not_found(e):
 
 if __name__ == "__main__":
     try:
-        joiner = Process(target=makeJoiner, args=(p_queue,))
-        joiner.start()
+        #joiner = Process(target=makeJoiner, args=(p_queue,))
+        #joiner.start()
         WSGIRequestHandler.protocol_version = "HTTP/1.1"
         app.run(host='0.0.0.0', port=config['server_port'], debug=True)
     except (KeyboardInterrupt, SystemExit):
@@ -222,6 +222,7 @@ if __name__ == "__main__":
     finally:
         sys.exit(0)
         p_queue.put(None)
-        joiner.join()
+        print (multiprocessing.active_children())
+        #joiner.join()
     # End try/except block
 # End if
