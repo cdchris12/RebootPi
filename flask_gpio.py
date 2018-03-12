@@ -184,7 +184,7 @@ def statusAll():
     processes = []
     for name in miners:
         miner = miners[name]
-        p = Process(target=miner.status, args=(r_queue))
+        p = Process(target=miner.status, args=(r_queue,))
         p.start()
         processes.append(p)
     # End for
