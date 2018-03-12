@@ -74,18 +74,22 @@ class miner:
 
     def status (self, q=None):
         power = GPIO.input(self.io_in_num)
-        program = self.healthCheck()
 
-        if power and program:
-            if q: q.put((self.name, 1))
-            return(1)
-        elif power and not program:
-            if q: q.put((self.name, 2))
-            return(2)
+        if power:
+            program = self.healthCheck()
+            if program:
+                if q: q.put((self.name, 1))
+                return(1)
+            else:
+                if q: q.put((self.name, 2))
+                return(2)
+            # End if/else block
+
         else:
             if q: q.put((self.name, 0))
             return(0)
         # End if/else block
+    # End def
 # End class
 
 def Setup(config):
