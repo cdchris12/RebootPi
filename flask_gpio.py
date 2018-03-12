@@ -6,6 +6,8 @@ import sys
 import os
 import json
 import argparse
+import multiprocessing
+
 import RPi.GPIO as GPIO
 
 from RebootServer import Setup, Cleanup
