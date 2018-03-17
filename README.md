@@ -6,12 +6,16 @@ running Claymore's Ethereum miner. This code runs natively on any Raspberry Pi M
 To get this up and running for you, you're going to need some hardware:
  - 8 channel relay module
   - Amazon link: http://a.co/bbGLOhq
+
  - Dupont Cables
   - Amazon link: http://a.co/bmq2vY2
+
  - Optocouplers
   - Amazon link: http://a.co/0tIJ8TV
+
  - Breadboard
   - Amazon link: http://a.co/bQdLbd2
+
  - Raspberry Pi Model B
   - Amazon link: http://a.co/1ZmYYJI
 
