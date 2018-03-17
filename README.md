@@ -5,19 +5,15 @@ running Claymore's Ethereum miner. This code runs natively on any Raspberry Pi M
 ## Requirements
 To get this up and running for you, you're going to need some hardware:
  - 8 channel relay module
-  - Amazon link: http://a.co/bbGLOhq
-
+    - Amazon link: http://a.co/bbGLOhq
  - Dupont Cables
-  - Amazon link: http://a.co/bmq2vY2
-
+    - Amazon link: http://a.co/bmq2vY2
  - Optocouplers
-  - Amazon link: http://a.co/0tIJ8TV
-
+    - Amazon link: http://a.co/0tIJ8TV
  - Breadboard
-  - Amazon link: http://a.co/bQdLbd2
-
+    - Amazon link: http://a.co/bQdLbd2
  - Raspberry Pi Model B
-  - Amazon link: http://a.co/1ZmYYJI
+    - Amazon link: http://a.co/1ZmYYJI
 
 ## Setup
 ### Setting up the Raspberry Pi
@@ -77,8 +73,8 @@ use Pi pin `38`, and so on.
 ## Attribution
 Clipart images used from the following sites:
  - Red Light:
-  - http://www.clker.com/clipart-2841.html
+    - http://www.clker.com/clipart-2841.html
  - Yellow Light:
-  - http://www.clker.com/clipart-2842.html
+    - http://www.clker.com/clipart-2842.html
 - Green Light:
-  - http://www.clker.com/clipart-2840.html
+    - http://www.clker.com/clipart-2840.html
