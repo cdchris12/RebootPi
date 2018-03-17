@@ -73,7 +73,7 @@ class miner:
     # End def
 
     def status (self, q=None):
-        power = GPIO.input(self.io_in_num)
+        power = not GPIO.input(self.io_in_num)
 
         if power:
             program = self.healthCheck()
