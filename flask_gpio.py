@@ -190,7 +190,7 @@ def statusAll():
     # End for
 
     for _p in processes:
-        _p.join(timeout=2)
+        _p.join()
     # End for
 
     results = {}

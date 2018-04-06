@@ -79,14 +79,17 @@ class miner:
             program = self.healthCheck()
             if program:
                 if q: q.put((self.name, 1))
+                print ("%s, %s" % (self.name, "1"))
                 return(1)
             else:
                 if q: q.put((self.name, 2))
+                print ("%s, %s" % (self.name, "2"))
                 return(2)
             # End if/else block
 
         else:
             if q: q.put((self.name, 0))
+            print ("%s, %s" % (self.name, "0"))
             return(0)
         # End if/else block
     # End def
