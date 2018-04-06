@@ -189,8 +189,8 @@ def statusAll():
         processes.append(p)
     # End for
 
-    for process in processes:
-        process.join()
+    for _p in processes:
+        _p.join(timeout=2)
     # End for
 
     results = {}
