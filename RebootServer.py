@@ -12,7 +12,7 @@ import json
 try:
     os.stat("config.json")
 except Exception:
-    print ("Config file missing!!!")
+    print ("Config file missing!!!", flush=True)
     sys.exit(1)
 else:
     with open('config.json', 'r') as infile:
@@ -73,24 +73,42 @@ class miner:
     # End def
 
     def status (self, q=None):
+        # 0: Miner turned off
+        # 1: Miner up
+        # 2: Miner frozen, or not mining
         power = not GPIO.input(self.io_in_num)
 
         if power:
             program = self.healthCheck()
             if program:
                 if q: q.put((self.name, 1))
-                print ("%s, %s" % (self.name, "1"))
+                #print ("%s, %s" % (self.name, "1"), flush=True)
                 return(1)
             else:
                 if q: q.put((self.name, 2))
-                print ("%s, %s" % (self.name, "2"))
+                #print ("%s, %s" % (self.name, "2"), flush=True)
                 return(2)
             # End if/else block
 
         else:
             if q: q.put((self.name, 0))
-            print ("%s, %s" % (self.name, "0"))
+            #print ("%s, %s" % (self.name, "0"), flush=True)
             return(0)
+        # End if/else block
+    # End def
+
+    def url_status (self, q=None):
+        # 1: Miner up
+        # 2: Miner frozen, or not mining
+
+        if self.healthCheck():
+            if q: q.put((self.name, 1))
+            #print ("%s, %s" % (self.name, "1"), flush=True)
+            return(1)
+        else:
+            if q: q.put((self.name, 2))
+            #print ("%s, %s" % (self.name, "2"), flush=True)
+            return(2)
         # End if/else block
     # End def
 # End class
@@ -123,25 +141,25 @@ def Cleanup():
 def RunServer(miners):
     # First, we want to make sure all the miners are at least turned on
     for miner in miners.keys():
-        if not miners[miner].healthCheck():
-            miners[miner].change()
-            #print("Started miner %s!" % (miner.name))
+        if miners[miner].url_status() != 1:
+            #print("Miner %s is fubar!" % (miners[miner].name), flush=True)
+            pass
         else:
-            #print("Miner %s already running!" % (miner.name))
+            #print("Miner %s already running!" % (miners[miner].name), flush=True)
             pass
         # End if/else block
     try:
         while True:
-            #print("Sleeping for 300 seconds...")
+            print("Sleeping for 300 seconds...", flush=True)
             sleep(300)
 
-            #print("Starting regular checks at %s..." % getTime())
+            print("Starting regular checks at %s..." % getTime(), flush=True)
             for miner in miners.keys():
                 if not miners[miner].healthCheck():
-                    #print("Miner %s wasn't responding, so we're rebooting it!" % miner.name)
+                    print("Miner %s wasn't responding, so we're rebooting it!" % miners[miner].name, flush=True)
                     miners[miner].reboot()
                 else:
-                    #print("miner %s's health check passed!" % miner.name)
+                    print("miner %s's health check passed!" % miners[miner].name, flush=True)
                     pass
                 # End if/else block
             # End for
@@ -172,9 +190,12 @@ def getMiners():
 
 def main():
     try:
-        miners = Setup()
+        #print ("Setting up the miner objects...", flush=True)
+        miners = Setup(config)
+        #print ("Running the miner server...", flush=True)
         RunServer(miners)
-    except Exception:
+    except Exception as e:
+        print ("{}" % e, flush=True)
         Cleanup()
     finally:
         sys.exit(0)
@@ -182,5 +203,6 @@ def main():
 # End def
 
 if __name__ == "__main__":
+    #print ("Running main...", flush=True)
     main()
 # End if
