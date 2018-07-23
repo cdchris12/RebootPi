@@ -115,7 +115,7 @@ class miner:
 
 def connection_check():
     #Creates r, varaible for google.com URL
-    r=requests.get('https://google.com')
+    r = requests.get('https://google.com')
 
     #Checks if HTTP code is 200(ok)
     if r.status_code ==200:
@@ -173,7 +173,7 @@ def RunServer(miners):
                         print("Miner %s wasn't responding, so we're rebooting it!" % miners[miner].name, flush=True)
                         miners[miner].reboot()
                     else:
-                        print("miner %s's health check passed!" % miners[miner].name, flush=True)
+                        print("Miner %s's health check passed!" % miners[miner].name, flush=True)
                         pass
                     # End if/else block
                 #End for block
