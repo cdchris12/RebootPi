@@ -113,6 +113,19 @@ class miner:
     # End def
 # End class
 
+def connection_check():
+	#Creates r, varaible for google.com URL
+	r=requests.get('https://google.com')
+	
+	#Checks if HTTP code is 200(ok)
+	if r.status_code ==200:
+		return true
+	else:
+		return false
+	# End if/else block
+
+# End def
+
 def Setup(config):
     # Set the GPIO pins to use the board numbering scheme
     GPIO.setmode(GPIO.BOARD)
@@ -154,15 +167,19 @@ def RunServer(miners):
             sleep(300)
 
             print("Starting regular checks at %s..." % getTime(), flush=True)
-            for miner in miners.keys():
-                if not miners[miner].healthCheck():
-                    print("Miner %s wasn't responding, so we're rebooting it!" % miners[miner].name, flush=True)
-                    miners[miner].reboot()
-                else:
-                    print("miner %s's health check passed!" % miners[miner].name, flush=True)
-                    pass
-                # End if/else block
-            # End for
+            if connection_check():
+                for miner in miners.keys():
+                    if not miners[miner].healthCheck():
+                        print("Miner %s wasn't responding, so we're rebooting it!" % miners[miner].name, flush=True)
+                        miners[miner].reboot()
+                    else:
+                        print("miner %s's health check passed!" % miners[miner].name, flush=True)
+                        pass
+                    # End if/else block
+                #End for block
+            else:
+                print("Connection to Google not found. Internet may be down.", flush=True)
+	    # End if/else block
         # End while
     except KeyboardInterrupt:
         return
