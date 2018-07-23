@@ -114,15 +114,15 @@ class miner:
 # End class
 
 def connection_check():
-	#Creates r, varaible for google.com URL
-	r=requests.get('https://google.com')
-	
-	#Checks if HTTP code is 200(ok)
-	if r.status_code ==200:
-		return true
-	else:
-		return false
-	# End if/else block
+    #Creates r, varaible for google.com URL
+    r=requests.get('https://google.com')
+
+    #Checks if HTTP code is 200(ok)
+    if r.status_code ==200:
+        return true
+    else:
+        return false
+    # End if/else block
 
 # End def
 
@@ -179,7 +179,7 @@ def RunServer(miners):
                 #End for block
             else:
                 print("Connection to Google not found. Internet may be down.", flush=True)
-	    # End if/else block
+        # End if/else block
         # End while
     except KeyboardInterrupt:
         return
